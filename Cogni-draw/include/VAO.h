@@ -9,7 +9,6 @@ class VAO
 {
 public:
 
-	// Constructor that generates a VAO ID
 	VAO();
 	~VAO();
 

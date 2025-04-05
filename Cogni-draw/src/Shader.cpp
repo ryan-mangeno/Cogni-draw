@@ -5,7 +5,6 @@
 
 
 
-// Constructor that build the Shader Program from 2 different shaders
 Shader::Shader(const std::string& filepath) : m_UniformLocationCache()
 {
 
@@ -130,7 +129,7 @@ int Shader::get_uniform(const std::string& name)
 
 void Shader::set_uniform_mat4f(const std::string& uni_name, const glm::mat4& matrix)
 {
-	glUniformMatrix4fv(get_uniform(uni_name), 1, GL_FALSE, &matrix));
+	glUniformMatrix4fv(get_uniform(uni_name), 1, GL_FALSE, glm::value_ptr(matrix));
 }
 
 

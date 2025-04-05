@@ -1,8 +1,7 @@
-﻿  EBO.cpp
-  Shader.cpp
-  stb_image_imp.cpp
+﻿  Shader.cpp
   Texture.cpp
-  VBO.cpp
+  VAO.cpp
+  stb_image_imp.cpp
   Generating Code...
 EBO.obj : error LNK2001: unresolved external symbol glad_glBindBuffer
 VBO.obj : error LNK2001: unresolved external symbol glad_glBindBuffer
