@@ -1,4 +1,3 @@
-
 #ifndef EBO_CLASS_H
 #define EBO_CLASS_H
 
@@ -13,7 +12,7 @@ class EBO
 
 public:
 
-	EBO(uint32_t indices[], uint32_t count);
+	EBO(uint32_t* indices, uint32_t count);
 	~EBO();
 
 	void Bind() const;

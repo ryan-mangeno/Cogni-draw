@@ -4,7 +4,7 @@
 
 
 
-EBO::EBO(uint32_t indices[], uint32_t count)
+EBO::EBO(uint32_t* indices, uint32_t count)
 {
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ID);
 	glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, sizeof(uint32_t) * count , indices);

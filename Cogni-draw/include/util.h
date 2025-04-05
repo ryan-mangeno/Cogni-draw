@@ -12,7 +12,4 @@ struct Vertex
 };
 
 
-
-
-
 #endif
