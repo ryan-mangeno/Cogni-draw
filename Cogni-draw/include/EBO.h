@@ -15,10 +15,10 @@ public:
 	EBO(uint32_t* indices, uint32_t count);
 	~EBO();
 
-	void Bind() const;
-	void Unbind() const;
+	void bind() const;
+	void unbind() const;
 
-	inline uint32_t GetID() const { return m_ID; };
+	inline uint32_t get_ID() const { return m_ID; };
 
 private:
 	uint32_t m_ID;

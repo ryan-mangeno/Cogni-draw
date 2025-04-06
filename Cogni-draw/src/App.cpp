@@ -1,4 +1,5 @@
 #include "App.h"
+#include "Gui.h"
 
 #include <iostream>
 
@@ -7,8 +8,11 @@ void App::run()
 
 	if (!init()) return;
 
+	Gui gui(m_Window);
+
 	while (!glfwWindowShouldClose(m_Window))
 	{
+		gui.render();
 		glfwPollEvents();
 		glfwSwapBuffers(m_Window);
 	}
@@ -38,7 +42,8 @@ bool App::init()
 	if (!glfwInit())
 		success = false;
 
-	else {
+	else 
+	{
 
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);

@@ -19,6 +19,17 @@ Texture::Texture(const std::string& file_path)
 
 	else
 	{
+
+		//default to red
+		GLenum format = GL_RED;
+
+		if (m_BPP == 1)
+			format = GL_RED;
+		else if (m_BPP == 3)
+			format = GL_RGB;
+		else if (m_BPP == 4)
+			format = GL_RGBA;
+
 		glGenTextures(1, &m_ID);
 		glBindTexture(GL_TEXTURE_2D, m_ID);
 
@@ -28,7 +39,7 @@ Texture::Texture(const std::string& file_path)
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
 
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_Width, m_Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, img_bytes);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_Width, m_Height, 0, format, GL_UNSIGNED_BYTE, img_bytes);
 		glGenerateMipmap(GL_TEXTURE_2D);
 
 		stbi_image_free(img_bytes);

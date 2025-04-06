@@ -8,3 +8,5 @@ Cogni-draw/*.userosscache
 Cogni-draw/*.sln.docstates
 Cogni-draw/Cogni-draw/x64/
 Cogni-draw/x64/
+Cogni-draw/vendor/imgui/ImGui.vcxproj
+Cogni-draw/imgui.ini
