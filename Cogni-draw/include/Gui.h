@@ -12,7 +12,7 @@ public:
 
 	Gui(GLFWwindow*);
 	~Gui();
-	void render();
+	void render(uint32_t paint_fbo_id);
 
 
 private:

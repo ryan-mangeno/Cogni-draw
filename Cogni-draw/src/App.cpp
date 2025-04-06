@@ -1,5 +1,6 @@
 #include "App.h"
 #include "Gui.h"
+#include "DrawDock.h"
 
 #include <iostream>
 
@@ -9,10 +10,13 @@ void App::run()
 	if (!init()) return;
 
 	Gui gui(m_Window);
+	DrawDock paint(1920, 1080, "Resources/Shaders/2dpaint.glsl");
 
 	while (!glfwWindowShouldClose(m_Window))
 	{
-		gui.render();
+		paint.update(m_Window);
+		paint.render();
+		gui.render(paint.get_fbo_scene_ID());
 		glfwPollEvents();
 		glfwSwapBuffers(m_Window);
 	}
@@ -35,18 +39,18 @@ bool App::init()
 	bool success = true;
 
 
-	constexpr uint32_t SCREEN_WIDTH = 1280;
-	constexpr uint32_t SCREEN_HEIGHT = 720;
+	constexpr uint32_t SCREEN_WIDTH = 1920;
+	constexpr uint32_t SCREEN_HEIGHT = 1080;
 
-	// Initialize GLFW
+	// init GLFW
 	if (!glfwInit())
 		success = false;
 
 	else 
 	{
 
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 		// Create window
@@ -79,10 +83,10 @@ bool App::init()
 		// white
 		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 
-		glEnable(GL_CULL_FACE);
-		glCullFace(GL_BACK);
-		glFrontFace(GL_CW);
-		glEnable(GL_DEPTH_TEST);
+		//glEnable(GL_CULL_FACE);
+		//glCullFace(GL_BACK);
+		//glFrontFace(GL_CW);
+		//glEnable(GL_DEPTH_TEST);
 	}
 
 	return success;

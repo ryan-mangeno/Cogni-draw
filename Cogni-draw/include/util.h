@@ -4,7 +4,14 @@
 
 #include <glm/glm.hpp>
 	
-struct Vertex
+struct Vertex2D
+{
+	glm::vec2 pos;
+	glm::vec3 color;
+	// no tex pos since this is just for painting for now
+};
+
+struct Vertex3D
 {
 	glm::vec3 pos;
 	glm::vec3 color;

@@ -11,8 +11,15 @@ class VBO
 public:	
 	
 
-	VBO(std::vector<Vertex>& vertices, uint32_t count);
+	VBO(std::vector<Vertex2D>& vertices);
+	VBO();
+
+	// need to work on
+	//VBO(std::vector<Vertex3D>& vertices, uint32_t count);
+
 	~VBO();
+
+	void buffer_data(std::vector<Vertex2D>& vertices);
 
 	void bind() const;
 	void unbind() const;

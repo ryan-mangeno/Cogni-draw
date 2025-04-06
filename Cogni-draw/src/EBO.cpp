@@ -7,8 +7,9 @@
 EBO::EBO(uint32_t* indices, uint32_t count)
 {
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ID);
-	glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, sizeof(uint32_t) * count , indices);
 
+	// i need to allocate for additional space likely for ebo indices since we will paint and indices will grow
+	glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, sizeof(uint32_t) * count , indices);
 }
 
 EBO::~EBO()

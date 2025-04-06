@@ -42,8 +42,7 @@ void ModelLoader::Mesh::render(Shader* shader) {
 	unsigned int diffuseNr = 1;
 	unsigned int specularNr = 1;
 	for (int i = 0; i < textures.size(); i++) {
-		glActiveTexture(GL_TEXTURE1 + i); // Active proper texture unit before binding
-		// Retrieve texture number (the N in diffuse_textureN)
+		glActiveTexture(GL_TEXTURE1 + i); 
 		std::string number;
 		std::string name = textures[i].type;
 

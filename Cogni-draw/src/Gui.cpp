@@ -28,7 +28,7 @@ Gui::~Gui()
 	ImGui::DestroyContext();
 }
 
-void Gui::render()
+void Gui::render(uint32_t paint_fbo_id)
 {
 
 	// Start the Dear ImGui frame
@@ -44,7 +44,8 @@ void Gui::render()
 	ImGui::SetNextWindowPos(ImVec2(10, 10), ImGuiCond_FirstUseEver); 
 
 	ImGui::Begin("-~+");
-	ImGui::Text("HELLOOO!!!!", 1000.0f / m_Io->Framerate, m_Io->Framerate);
+	ImGui::Image(paint_fbo_id, ImVec2(1920, 1080));
+
 
 	ImGui::End();
 

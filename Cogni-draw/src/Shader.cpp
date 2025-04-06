@@ -32,15 +32,16 @@ Shader::Shader(const std::string& filepath) : m_UniformLocationCache()
 	// attaching the vert and frag shaders to program
 	glAttachShader(m_ID, vertexShader);
 	glAttachShader(m_ID, fragmentShader);
-	compile_errors(vertexShader, "PROGRAM");
 
 	glLinkProgram(m_ID);
 	glValidateProgram(m_ID);
 
+	compile_errors(m_ID, "PROGRAM");
 
 	// vertex and frag shaders now can be freed since we made program
 	glDeleteShader(vertexShader);
 	glDeleteShader(fragmentShader);
+
 
 }
 
@@ -86,7 +87,8 @@ ShaderProgramSource get_file_contents(const std::string& filename)
 				}
 			}
 			
-			else {
+			else 
+			{
 				ss[(int)type] << line << "\n";
 			}
 		}
@@ -157,9 +159,6 @@ void Shader::set_uniform_1i(const std::string& uni_name, const int val)
 
 void Shader::compile_errors(unsigned int shader, const char* type)
 {
-	// flag we can check for
-	int hasCompiled = 0;
-
 
 	int logLength = 0;
 	glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &logLength);
@@ -167,6 +166,7 @@ void Shader::compile_errors(unsigned int shader, const char* type)
 
 	if (type != "PROGRAM")
 	{
+		int hasCompiled = 0;
 		glGetShaderiv(shader, GL_COMPILE_STATUS, &hasCompiled);
 		if (hasCompiled == GL_FALSE)
 		{
@@ -176,8 +176,9 @@ void Shader::compile_errors(unsigned int shader, const char* type)
 	}
 	else
 	{
-		glGetProgramiv(shader, GL_LINK_STATUS, &hasCompiled);
-		if (hasCompiled == GL_FALSE)
+		int hasLinked = 0;
+		glGetProgramiv(shader, GL_LINK_STATUS, &hasLinked);
+		if (hasLinked == GL_FALSE)
 		{
 			glGetProgramInfoLog(shader, logLength, NULL, infoLog);
 			std::cout << "SHADER_LINKING_ERROR for:" << type << "\n" << infoLog << std::endl;
