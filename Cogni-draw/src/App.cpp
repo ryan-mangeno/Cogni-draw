@@ -11,10 +11,11 @@ void App::run()
 
 	Gui gui(m_Window);
 	DrawDock paint(1920, 1080, "Resources/Shaders/2dpaint.glsl");
+	set_draw_dock(paint);
 
 	while (!glfwWindowShouldClose(m_Window))
 	{
-		paint.update(m_Window);
+		paint.update(gui.get_hover_state());
 		paint.render();
 		gui.render(paint.get_fbo_scene_ID());
 		glfwPollEvents();
@@ -33,6 +34,59 @@ App::~App()
 
 	glfwTerminate();
 }
+
+
+
+
+
+static bool mouse_held = false;
+
+
+static void on_mouse_click(GLFWwindow* window, int button, int action, int mods)
+{
+
+	ImGui_ImplGlfw_MouseButtonCallback(window, button, action, mods);
+
+	if (button == GLFW_MOUSE_BUTTON_LEFT)
+	{
+		auto* dock = static_cast<DrawDock*>(glfwGetWindowUserPointer(window));
+		if (action == GLFW_PRESS)
+		{
+			mouse_held = true;
+			double x, y;
+			glfwGetCursorPos(window, &x, &y);
+			dock->on_click_or_drag(static_cast<float>(x), static_cast<float>(y));
+		}
+		else if (action == GLFW_RELEASE)
+		{
+			dock->on_mouse_release();
+			mouse_held = false;
+		}
+	}
+}
+
+static void cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
+{
+
+	ImGui_ImplGlfw_CursorPosCallback(window, xpos, ypos);
+
+	if (mouse_held)
+	{
+		auto* dock = static_cast<DrawDock*>(glfwGetWindowUserPointer(window));
+		dock->on_click_or_drag(static_cast<float>(xpos), static_cast<float>(ypos));
+	}
+}
+
+
+
+void App::set_draw_dock(DrawDock& dock) 
+{
+	glfwSetWindowUserPointer(m_Window, &dock);
+	glfwSetMouseButtonCallback(m_Window, on_mouse_click);
+	glfwSetCursorPosCallback(m_Window, cursor_position_callback);
+}
+
+
 
 bool App::init()
 {

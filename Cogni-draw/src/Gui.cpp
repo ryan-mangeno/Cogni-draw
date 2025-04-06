@@ -1,6 +1,6 @@
 #include "Gui.h"
 
-Gui::Gui(GLFWwindow* window) : m_Window(window)
+Gui::Gui(GLFWwindow* window) : m_Window(window), m_IsHovered(false)
 {
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
@@ -45,7 +45,7 @@ void Gui::render(uint32_t paint_fbo_id)
 
 	ImGui::Begin("-~+");
 	ImGui::Image(paint_fbo_id, ImVec2(1920, 1080));
-
+	m_IsHovered = ImGui::IsItemHovered();
 
 	ImGui::End();
 

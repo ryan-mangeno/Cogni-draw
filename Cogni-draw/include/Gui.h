@@ -14,6 +14,7 @@ public:
 	~Gui();
 	void render(uint32_t paint_fbo_id);
 
+	inline bool get_hover_state() const { return m_IsHovered; }
 
 private:
 
@@ -22,6 +23,7 @@ private:
 
 	bool m_show_demo_window = true;
 	bool m_show_another_window = false;
+	bool m_IsHovered;
 	const ImVec4 m_clear_color = ImVec4(0.0f, 0.0f, 0.0f, 1.00f);
 
 

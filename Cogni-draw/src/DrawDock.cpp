@@ -3,7 +3,7 @@
 
 // for right now the frame buffer will be the same size at the drawing pad
 DrawDock::DrawDock(unsigned int width, unsigned int height, const std::string& shader_path)
-	: m_Fbo({ width, height }), m_Shader(shader_path), m_Width(width), m_Height(height), m_Vao(), m_Vbo()
+	: m_Fbo({ width, height }), m_Shader(shader_path), m_Width(width), m_Height(height), m_Vao(), m_Vbo(), m_IsHovered(false)
 {
 
     m_Vao.link_attrib(m_Vbo, 0, 2, GL_FLOAT, sizeof(Vertex2D), (void*)0);
@@ -28,6 +28,11 @@ DrawDock::~DrawDock()
 
 }
 
+void DrawDock::update(bool hover_state)
+{
+    m_IsHovered = hover_state;
+}
+
 void DrawDock::render()
 {
     GLint viewport[4];
@@ -42,51 +47,68 @@ void DrawDock::render()
 
     glPointSize(10.0f);
     m_Vao.bind();
-    glDrawArrays(GL_POINTS, 0, m_DrawnVertices.size());
-    m_Vao.unbind();
 
+
+    if (m_Delimters.size() > 0 && m_DrawnVertices.size() > 0)
+    {
+
+        size_t startIdx = 0; 
+        size_t endIdx = 0;
+        for (size_t i = 0; i < m_Delimters.size(); ++i)
+        {
+            size_t endIdx = m_Delimters[i]; 
+
+            // if start is on a delimeter just advance is up 1
+            if (startIdx != 0)startIdx++;
+
+            // draw between the start and end indices
+            if (startIdx < endIdx) 
+            {
+                glDrawArrays(GL_LINE_STRIP, startIdx, endIdx - startIdx);
+            }
+
+            startIdx = endIdx;
+        }
+        
+        // if we are currently drawing there wont be an end delimeter yet so just draw until the end of drawn verts
+        if (m_Delimters[m_Delimters.size() - 1] != m_DrawnVertices.size() - 1)
+        {
+            endIdx = m_DrawnVertices.size() - 1;
+            glDrawArrays(GL_LINE_STRIP, startIdx+1, endIdx - startIdx);
+        }
+    }
+    else
+    {
+        glDrawArrays(GL_LINE_STRIP, 0, m_DrawnVertices.size());
+    }
+
+
+    m_Vao.unbind();
     m_Fbo.unbind();
     glViewport(viewport[0], viewport[1], viewport[2], viewport[3]); 
 
 }
 
-// to make callback for 
 void DrawDock::on_click_or_drag(float mouse_x, float mouse_y)
 {
-    float normalizedX = mouse_x / m_Width;
-    float normalizedY = 1.0f - (mouse_x / m_Height);
+
+    if (!m_IsHovered)
+        return;
+
+    // transform into ndc cords
+    float normalizedX = (2.0f * mouse_x) / m_Width - 1.0f;  
+    float normalizedY = -(1.0f - (2.0f * mouse_y) / m_Height);
+
 
     m_DrawnVertices.push_back({ glm::vec2(normalizedX, normalizedY), {1.0f, 0.0f, 0.0f} });
     m_Vbo.buffer_data(m_DrawnVertices);
 }
 
 
-// temporary
-void DrawDock::update(GLFWwindow* window)
+void DrawDock::on_mouse_release()
 {
-    double mouseX, mouseY;
-    glfwGetCursorPos(window, &mouseX, &mouseY);
+    if (!m_IsHovered)
+        return;
 
-    int width, height;
-    glfwGetWindowSize(window, &width, &height);
-
-    // normalizing
-    float normX = static_cast<float>(mouseX) / width;
-    float normY = static_cast<float>(mouseY) / height;
-
-    // convert [0, 1] to NDC [-1, 1]
-    float ndcX = (2.0f * normX) - 1.0f;  // Maps [0, 1] to [-1, 1]
-    float ndcY = (2.0f * normY) - 1.0f;  // Maps [0, 1] to [-1, 1]
-
-    // NDC goes from -1 to 1 for both axes, so check this before adding
-    if (ndcX >= -1.0f && ndcX <= 1.0f && ndcY >= -1.0f && ndcY <= 1.0f)
-    {
-        glm::vec2 pos(ndcX, ndcY);
-        glm::vec3 color(1.0f, 0.0f, 0.0f);
-
-        std::cout << "NDC Position: (" << pos.x << ", " << pos.y << ") " << "Vertex Count: " << m_DrawnVertices.size() << std::endl;
-        m_DrawnVertices.push_back({ pos, color });
-
-        m_Vbo.buffer_data(m_DrawnVertices);
-    }
+    m_Delimters.push_back(m_DrawnVertices.size() - 1);
 }
