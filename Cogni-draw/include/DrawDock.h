@@ -21,9 +21,9 @@ public:
 	void render();
 	void update(bool hover_state);
 
-	void draw(float mouse_x, float mouse_y);
+	void start_draw(float mouse_x, float mouse_y);
 	void stop_draw();
-	void copy(float mouse_x, float mouse_y);
+	void start_copy(float mouse_x, float mouse_y);
 	void end_copy();
 
 

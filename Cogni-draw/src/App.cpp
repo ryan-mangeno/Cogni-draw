@@ -58,11 +58,11 @@ static void on_mouse_click(GLFWwindow* window, int button, int action, int mods)
 			mouse_held = true;
 			double x, y;
 			glfwGetCursorPos(window, &x, &y);
-			dock->draw(static_cast<float>(x), static_cast<float>(y));
+			dock->start_draw(static_cast<float>(x), static_cast<float>(y));
 		}
 		else if (action == GLFW_RELEASE)
 		{
-			dock->on_draw_release();
+			dock->stop_draw();
 			mouse_held = false;
 		}
 	}
@@ -79,7 +79,7 @@ static void on_mouse_click(GLFWwindow* window, int button, int action, int mods)
 		}
 		else if( action == GLFW_RELEASE)
 		{
-			dock->stop_copy();
+			dock->end_copy();
 			mouse_held = false;
 		}
 
@@ -90,11 +90,16 @@ static void cursor_position_callback(GLFWwindow* window, double xpos, double ypo
 {
 
 	ImGui_ImplGlfw_CursorPosCallback(window, xpos, ypos);
+	DrawDock* dock = static_cast<DrawDock*>(glfwGetWindowUserPointer(window));
+	
+	// add bool for drawing and copying
+	// bool drawing = dock->get_draw_state();
+	// bool copying = dock->get_copy_state();
 
 	if (mouse_held)
 	{
 		auto* dock = static_cast<DrawDock*>(glfwGetWindowUserPointer(window));
-		dock->on_click_or_drag(static_cast<float>(xpos), static_cast<float>(ypos));
+		//dock->on_click_or_drag(static_cast<float>(xpos), static_cast<float>(ypos));
 	}
 }
 

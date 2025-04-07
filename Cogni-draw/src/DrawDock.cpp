@@ -89,7 +89,7 @@ void DrawDock::render()
 
 }
 
-void DrawDock::draw(float mouse_x, float mouse_y)
+void DrawDock::start_draw(float mouse_x, float mouse_y)
 {
 
     if (!m_IsHovered)
