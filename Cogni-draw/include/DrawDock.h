@@ -21,8 +21,11 @@ public:
 	void render();
 	void update(bool hover_state);
 
-	void on_click_or_drag(float mouse_x, float mouse_y);
-	void on_mouse_release();
+	void draw(float mouse_x, float mouse_y);
+	void stop_draw();
+	void copy(float mouse_x, float mouse_y);
+	void end_copy();
+
 
 	inline uint32_t get_fbo_scene_ID() { return m_Fbo.get_scene_tex_ID(); }
 	inline bool get_hover_state() const { return m_IsHovered; }

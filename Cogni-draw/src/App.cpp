@@ -42,26 +42,47 @@ App::~App()
 static bool mouse_held = false;
 
 
+// need to make call back for keyboard so when you copy you hit enter to make api call
+
 static void on_mouse_click(GLFWwindow* window, int button, int action, int mods)
 {
 
 	ImGui_ImplGlfw_MouseButtonCallback(window, button, action, mods);
 
+	// for drawing if in 2d
 	if (button == GLFW_MOUSE_BUTTON_LEFT)
 	{
-		auto* dock = static_cast<DrawDock*>(glfwGetWindowUserPointer(window));
+		DrawDock* dock = static_cast<DrawDock*>(glfwGetWindowUserPointer(window));
 		if (action == GLFW_PRESS)
 		{
 			mouse_held = true;
 			double x, y;
 			glfwGetCursorPos(window, &x, &y);
-			dock->on_click_or_drag(static_cast<float>(x), static_cast<float>(y));
+			dock->draw(static_cast<float>(x), static_cast<float>(y));
 		}
 		else if (action == GLFW_RELEASE)
 		{
-			dock->on_mouse_release();
+			dock->on_draw_release();
 			mouse_held = false;
 		}
+	}
+	// for drag and copy, once again in 2d for now
+	else if( button == GLFW_MOUSE_BUTTON_RIGHT )
+	{ 
+		DrawDock* dock =static_cast<DrawDock*>(glfwGetWindowUserPointer(window));
+	 	if(action == GLFW_PRESS)
+		{
+			mouse_held = true;
+			double x,y;
+			glfwGetCursorPos(window, &x, &y);
+			dock->start_copy(static_cast<float>(x), static_cast<float>(y));
+		}
+		else if( action == GLFW_RELEASE)
+		{
+			dock->stop_copy();
+			mouse_held = false;
+		}
+
 	}
 }
 

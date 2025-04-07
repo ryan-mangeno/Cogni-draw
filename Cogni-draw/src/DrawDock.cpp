@@ -89,7 +89,7 @@ void DrawDock::render()
 
 }
 
-void DrawDock::on_click_or_drag(float mouse_x, float mouse_y)
+void DrawDock::draw(float mouse_x, float mouse_y)
 {
 
     if (!m_IsHovered)
@@ -105,7 +105,7 @@ void DrawDock::on_click_or_drag(float mouse_x, float mouse_y)
 }
 
 
-void DrawDock::on_mouse_release()
+void DrawDock::stop_draw()
 {
     if (!m_IsHovered)
         return;
