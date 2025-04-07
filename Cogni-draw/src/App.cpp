@@ -136,7 +136,7 @@ bool App::init()
 
 		// white
 		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC1_ALPHA); // might need to enable/disable when rendering 2d/3d
 		//glEnable(GL_CULL_FACE);
 		//glCullFace(GL_BACK);
 		//glFrontFace(GL_CW);
