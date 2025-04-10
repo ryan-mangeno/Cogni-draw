@@ -112,3 +112,13 @@ void DrawDock::stop_draw()
 
     m_Delimters.push_back(m_DrawnVertices.size() - 1);
 }
+
+
+void DrawDock::start_copy(float mouse_x, float mouse_y)
+{
+}
+
+void DrawDock::end_copy()
+{
+
+}
