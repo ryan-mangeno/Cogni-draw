@@ -12,7 +12,8 @@ class EBO
 
 public:
 
-	EBO(uint32_t* indices, uint32_t count);
+	EBO();
+	EBO(const uint32_t* indices, uint32_t count);
 	~EBO();
 
 	void bind() const;

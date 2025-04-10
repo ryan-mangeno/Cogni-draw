@@ -10,7 +10,7 @@ void App::run()
 	if (!init()) return;
 
 	Gui gui(m_Window);
-	DrawDock paint(1920, 1080, "Resources/Shaders/2dpaint.glsl");
+	DrawDock paint(1920, 1080);
 	set_draw_dock(paint);
 
 	while (!glfwWindowShouldClose(m_Window))
@@ -98,8 +98,8 @@ static void cursor_position_callback(GLFWwindow* window, double xpos, double ypo
 
 	if (mouse_held)
 	{
-		auto* dock = static_cast<DrawDock*>(glfwGetWindowUserPointer(window));
-		//dock->on_click_or_drag(static_cast<float>(xpos), static_cast<float>(ypos));
+		DrawDock* dock = static_cast<DrawDock*>(glfwGetWindowUserPointer(window));
+		dock->on_cursor_move(static_cast<float>(xpos), static_cast<float>(ypos));
 	}
 }
 
@@ -162,8 +162,8 @@ bool App::init()
 
 		// white
 		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC1_ALPHA); // might need to enable/disable when rendering 2d/3d
-		//glEnable(GL_CULL_FACE);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);	
+		glEnable(GL_BLEND);
 		//glCullFace(GL_BACK);
 		//glFrontFace(GL_CW);
 		//glEnable(GL_DEPTH_TEST);
