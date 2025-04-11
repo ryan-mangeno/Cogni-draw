@@ -29,7 +29,7 @@ public:
 	void on_cursor_move(float mouse_x, float mouse_y);
 
 
-	inline uint32_t get_fbo_scene_ID() { return m_Fbo.get_scene_tex_ID(); }
+	inline uint32_t get_fbo_scene_ID() { return m_Fbo.get_full_scene_tex_ID(); }
 	inline bool get_hover_state() const { return m_IsHovered; }
 
 private:
@@ -52,8 +52,6 @@ private:
 
 	VBO m_PaintVbo;
 	VBO m_CopyVbo;
-
-	uint32_t m_CanvasTextureID;
 
 	std::vector<Vertex2D> m_DrawnVertices; 
 	std::vector<uint32_t> m_Delimters; // when we pick up stencil, we know where to draw to

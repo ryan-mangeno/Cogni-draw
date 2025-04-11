@@ -16,7 +16,7 @@ Gui::Gui(GLFWwindow* window) : m_Window(window), m_IsHovered(false)
 
 	// setting up Platform/Renderer backends
 	ImGui_ImplGlfw_InitForOpenGL(m_Window, true);
-	const char* glsl_version = "#version 460";
+	const char* glsl_version = "#version 330";
 	ImGui_ImplOpenGL3_Init(glsl_version);
 
 }
@@ -43,7 +43,7 @@ void Gui::render(uint32_t paint_fbo_id)
 	// position the window
 	ImGui::SetNextWindowPos(ImVec2(10, 10), ImGuiCond_FirstUseEver); 
 
-	ImGui::Begin("-~+");
+	ImGui::Begin("CG-Sketch");
 	ImGui::Image(paint_fbo_id, ImVec2(1920, 1080));
 	m_IsHovered = ImGui::IsItemHovered();
 

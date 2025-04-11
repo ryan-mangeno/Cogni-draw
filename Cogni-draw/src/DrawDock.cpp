@@ -5,7 +5,7 @@
 
 // for right now the frame buffer will be the same size at the drawing pad
 DrawDock::DrawDock(unsigned int width, unsigned int height)
-	: m_Fbo({ width, height }), m_PaintShader("Resources/Shaders/2dpaint.glsl"), m_CopyShader("Resources/Shaders/drag_rect.glsl"),
+	: m_Fbo({ width, height, 2 }), m_PaintShader("Resources/Shaders/2dpaint.glsl"), m_CopyShader("Resources/Shaders/drag_rect.glsl"),
     m_Width(width), m_Height(height), m_PaintVao(), m_PaintVbo(sizeof(Vertex2D) * width * height), m_CopyVao(), m_CopyVbo(sizeof(glm::vec2)*6), m_IsHovered(false),
     m_IsDrawing(false), m_IsCopying(false), m_CopyRect()
 {
@@ -13,19 +13,8 @@ DrawDock::DrawDock(unsigned int width, unsigned int height)
     m_PaintVao.link_attrib(m_PaintVbo, 1, 3, GL_FLOAT, sizeof(Vertex2D), (void*)offsetof(Vertex2D, color));
 
     m_CopyVao.link_attrib(m_CopyVbo, 0, 2, GL_FLOAT, sizeof(glm::vec2), (void*)0);
-    
 
-    // will be drawing on this texture
-    glGenTextures(1, &m_CanvasTextureID); 
-    glBindTexture(GL_TEXTURE_2D, m_CanvasTextureID);
-
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);  
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);  
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE); 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE); 
-
-    // empty texture
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr); 
+    m_Fbo.clear_fbo();
 }
 
 DrawDock::~DrawDock()
@@ -43,56 +32,26 @@ void DrawDock::render()
     GLint viewport[4];
     glGetIntegerv(GL_VIEWPORT, viewport);
     m_Fbo.bind();
-
-    glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    m_Fbo.set_draw_target(0);
 
     const glm::uvec2& vp = m_Fbo.get_spec().viewport;
     glViewport(0, 0, vp[0], vp[1]);
 
     m_PaintShader.bind();
-    glBindTexture(GL_TEXTURE_2D, m_CanvasTextureID);
 
     glPointSize(10.0f);
     m_PaintVao.bind();
 
+    // drawing the current brush of paint 
+    glDrawArrays(GL_LINE_STRIP, 0, m_DrawnVertices.size());
 
-    if (m_Delimters.size() > 0 && m_DrawnVertices.size() > 0)
-    {
+    m_Fbo.set_draw_target(1);
+    m_Fbo.clear_fbo_target(1);
+    m_Fbo.blit_buffer();
 
-        size_t startIdx = 0; 
-        size_t endIdx = 0;
-        for (size_t i = 0; i < m_Delimters.size(); ++i)
-        {
-            size_t endIdx = m_Delimters[i]; 
-
-            // if start is on a delimeter just advance is up 1
-            if (startIdx != 0)startIdx++;
-
-            // draw between the start and end indices
-            if (startIdx < endIdx) 
-            {
-                glDrawArrays(GL_LINE_STRIP, startIdx, endIdx - startIdx);
-            }
-
-            startIdx = endIdx;
-        }
-        
-        // if we are currently drawing there wont be an end delimeter yet so just draw until the end of drawn verts
-        if (m_Delimters[m_Delimters.size() - 1] != m_DrawnVertices.size() - 1)
-        {
-            endIdx = m_DrawnVertices.size() - 1;
-            glDrawArrays(GL_LINE_STRIP, startIdx+1, endIdx - startIdx);
-        }
-    }
-    else
-    {
-        glDrawArrays(GL_LINE_STRIP, 0, m_DrawnVertices.size());
-    }
-
-    
     if (m_IsCopying)
     {
+        // drawing to copy color attachment buffer which is at index 1, i will add macros soon
         m_CopyShader.bind();
         m_CopyVao.bind();
         glDrawArrays(GL_TRIANGLES, 0, 6);
@@ -130,7 +89,8 @@ void DrawDock::stop_draw()
 
     m_IsDrawing = false;
 
-    m_Delimters.push_back(m_DrawnVertices.size() - 1);
+    // since we rendered to fbo we dont have to clear unless the user wants to, we can simple flush vertices
+    std::vector<Vertex2D>().swap(m_DrawnVertices);
 }
 
 
