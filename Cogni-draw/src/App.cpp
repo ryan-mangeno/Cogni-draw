@@ -1,6 +1,7 @@
 #include "App.h"
 #include "Gui.h"
 #include "DrawDock.h"
+#include "RunPy.h"
 
 #include <iostream>
 
@@ -12,6 +13,9 @@ void App::run()
 	Gui gui(m_Window);
 	DrawDock paint(1920, 1080);
 	set_draw_dock(paint);
+
+	std::atomic_flag is_done;
+	run_async_python("python/anthro_api.py", is_done);
 
 	while (!glfwWindowShouldClose(m_Window))
 	{

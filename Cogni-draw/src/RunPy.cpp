@@ -1,10 +1,19 @@
 #include "RunPy.h"
+#include "Macros.h"
+
+#include <iostream>
 
 void run_async_python(const std::string& input_file, std::atomic_flag& is_done)
 {
 
-    std::stringstream sys_cmd("");
+    static std::stringstream sys_cmd("");
+
+#ifdef WINDOWS
+    sys_cmd << "python " << input_file;
+#elif LINUX
     sys_cmd << "python3 " << input_file;
+#endif       
+
 
     std::function<void()> run_script_fn = [&] 
         {
