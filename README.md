@@ -3,4 +3,4 @@ AI Driven 2D to 3D Sketching Application
 
 how it looks so far :)
 
-![image](https://github.com/user-attachments/assets/e156b76e-640b-4721-a471-dc1a737dbbba)
+![demo](https://github.com/user-attachments/assets/a0de6527-1acf-4b3f-897f-fa103f4469ac)
