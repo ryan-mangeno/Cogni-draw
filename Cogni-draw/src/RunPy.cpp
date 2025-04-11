@@ -1,6 +1,6 @@
 #include "RunPy.h"
 
-void run_async_python(const std::string& input_file, std::atomic<bool>& is_done)
+void run_async_python(const std::string& input_file, std::atomic_flag& is_done)
 {
 
     std::stringstream sys_cmd("");
@@ -9,7 +9,7 @@ void run_async_python(const std::string& input_file, std::atomic<bool>& is_done)
     std::function<void()> run_script_fn = [&] 
         {
             std::system(sys_cmd.str().c_str()); 
-            is_done = true;
+            is_done.test_and_set();
         };
 
     // detatch to run seperate
