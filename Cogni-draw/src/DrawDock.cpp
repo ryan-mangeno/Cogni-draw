@@ -7,7 +7,7 @@
 DrawDock::DrawDock(unsigned int width, unsigned int height)
 	: m_Fbo({ width, height, 2 }), m_PaintShader("Resources/Shaders/2dpaint.glsl"), m_CopyShader("Resources/Shaders/drag_rect.glsl"),
     m_Width(width), m_Height(height), m_PaintVao(), m_PaintVbo(sizeof(Vertex2D) * width * height), m_CopyVao(), m_CopyVbo(sizeof(glm::vec2)*6), m_IsHovered(false),
-    m_IsDrawing(false), m_IsCopying(false), m_CopyRect()
+    m_IsDrawing(false), m_IsCopying(false), m_CopyRect(), m_StencilSize(3.05f), m_Color(1.0f, 1.0f, 1.0f)
 {
     m_PaintVao.link_attrib(m_PaintVbo, 0, 2, GL_FLOAT, sizeof(Vertex2D), (void*)0);
     m_PaintVao.link_attrib(m_PaintVbo, 1, 3, GL_FLOAT, sizeof(Vertex2D), (void*)offsetof(Vertex2D, color));
@@ -39,7 +39,8 @@ void DrawDock::render()
 
     m_PaintShader.bind();
 
-    glPointSize(10.0f);
+    glLineWidth(m_StencilSize);
+
     m_PaintVao.bind();
 
     // drawing the current brush of paint 
@@ -77,7 +78,7 @@ void DrawDock::start_draw(float mouse_x, float mouse_y)
     float normalizedY = -(1.0f - (2.0f * mouse_y) / m_Height);
 
 
-    m_DrawnVertices.push_back({ glm::vec2(normalizedX, normalizedY), {1.0f, 0.0f, 0.0f} });
+    m_DrawnVertices.push_back({ glm::vec2(normalizedX, normalizedY), m_Color });
     m_PaintVbo.buffer_data(m_DrawnVertices);
 }
 

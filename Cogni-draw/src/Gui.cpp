@@ -28,24 +28,39 @@ Gui::~Gui()
 	ImGui::DestroyContext();
 }
 
-void Gui::render(uint32_t paint_fbo_id)
+void Gui::render(DrawDock& dock)
 {
 
-	// Start the Dear ImGui frame
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplGlfw_NewFrame();
 	ImGui::NewFrame();
 
 	ImGuiID dockspace_id = ImGui::GetID("MyDockspace");
-	// docking window
 	ImGui::DockSpaceOverViewport(dockspace_id, ImGui::GetMainViewport());
 
-	// position the window
 	ImGui::SetNextWindowPos(ImVec2(10, 10), ImGuiCond_FirstUseEver); 
-
 	ImGui::Begin("CG-Sketch");
-	ImGui::Image(paint_fbo_id, ImVec2(1920, 1080));
+	ImGui::Image(dock.get_fbo_scene_ID(), ImVec2(1920, 1080));
 	m_IsHovered = ImGui::IsItemHovered();
+
+	ImGui::End();
+
+	ImGui::SetNextWindowSize(ImVec2(250, 100), ImGuiCond_FirstUseEver);  
+	ImGui::SetNextWindowPos(ImVec2(10, 10), ImGuiCond_FirstUseEver); 
+	ImGui::Begin("Stencil Config", nullptr, ImGuiWindowFlags_NoCollapse);
+
+	float stencil_config_size = dock.get_stencil_size_ref();  
+	if (ImGui::SliderFloat("Stencil Size", &stencil_config_size, 0.0f, 20.0f, "%.2f"))
+	{
+		dock.set_stencil_size(stencil_config_size);
+	}
+
+	// white
+	static ImVec4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
+	if (ImGui::ColorEdit3("Stencil Color", (float*)&color))
+	{
+		dock.set_stencil_color(glm::vec3{ color.x, color.y, color.z }); 
+	}
 
 	ImGui::End();
 

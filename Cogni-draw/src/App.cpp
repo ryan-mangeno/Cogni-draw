@@ -17,7 +17,7 @@ void App::run()
 	{
 		paint.update(gui.get_hover_state());
 		paint.render();
-		gui.render(paint.get_fbo_scene_ID());
+		gui.render(paint);
 		glfwPollEvents();
 		glfwSwapBuffers(m_Window);
 	}

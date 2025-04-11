@@ -26,8 +26,10 @@ public:
 	void start_copy(float mouse_x, float mouse_y);
 	void end_copy();
 
+	inline float& get_stencil_size_ref() { return m_StencilSize; }
 	void on_cursor_move(float mouse_x, float mouse_y);
-
+	inline void set_stencil_size(float size) { m_StencilSize = size; }
+	inline void set_stencil_color(glm::vec3 color) { m_Color = color; }
 
 	inline uint32_t get_fbo_scene_ID() { return m_Fbo.get_full_scene_tex_ID(); }
 	inline bool get_hover_state() const { return m_IsHovered; }
@@ -54,7 +56,6 @@ private:
 	VBO m_CopyVbo;
 
 	std::vector<Vertex2D> m_DrawnVertices; 
-	std::vector<uint32_t> m_Delimters; // when we pick up stencil, we know where to draw to
 
 	std::array<glm::vec2, 6> m_CopyRect;
 	glm::vec2 m_CopyPivot;
@@ -63,6 +64,8 @@ private:
 	bool m_IsHovered;
 	bool m_IsDrawing;
 	bool m_IsCopying;
+	float m_StencilSize;
+	glm::vec3 m_Color;
 };
 
 

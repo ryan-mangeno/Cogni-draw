@@ -1,7 +1,9 @@
 #ifndef GUI_H
 #define GUI_H
 
-#include <GLFW/glfw3.h>
+#include "DrawDock.h"
+
+
 #include <imgui/imgui.h>
 #include <imgui/imgui_impl_glfw.h>
 #include <imgui/imgui_impl_opengl3.h>
@@ -12,7 +14,7 @@ public:
 
 	Gui(GLFWwindow*);
 	~Gui();
-	void render(uint32_t paint_fbo_id);
+	void render(DrawDock& dock);
 
 	inline bool get_hover_state() const { return m_IsHovered; }
 
