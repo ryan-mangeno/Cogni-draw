@@ -1,16 +1,18 @@
 #include "DrawDock.h"
 #include "mathutil.h"
-
+#include "Image.h"
+#include <limits>
+#include <algorithm>
 
 
 // for right now the frame buffer will be the same size at the drawing pad
 DrawDock::DrawDock(unsigned int width, unsigned int height)
 	: m_Fbo({ width, height, 2 }), m_PaintShader("Resources/Shaders/2dpaint.glsl"), m_CopyShader("Resources/Shaders/drag_rect.glsl"),
     m_Width(width), m_Height(height), m_PaintVao(), m_PaintVbo(sizeof(Vertex2D) * width * height), m_CopyVao(), m_CopyVbo(sizeof(glm::vec2)*6), m_IsHovered(false),
-    m_IsDrawing(false), m_IsCopying(false), m_CopyRect(), m_StencilSize(3.05f), m_Color(1.0f, 1.0f, 1.0f)
+    m_IsDrawing(false), m_IsCopying(false), m_CopyRect(), m_StencilSize(3.05f), m_Color(1.0f, 1.0f, 1.0f, 1.0f)
 {
     m_PaintVao.link_attrib(m_PaintVbo, 0, 2, GL_FLOAT, sizeof(Vertex2D), (void*)0);
-    m_PaintVao.link_attrib(m_PaintVbo, 1, 3, GL_FLOAT, sizeof(Vertex2D), (void*)offsetof(Vertex2D, color));
+    m_PaintVao.link_attrib(m_PaintVbo, 1, 4, GL_FLOAT, sizeof(Vertex2D), (void*)offsetof(Vertex2D, color));
 
     m_CopyVao.link_attrib(m_CopyVbo, 0, 2, GL_FLOAT, sizeof(glm::vec2), (void*)0);
 
@@ -111,6 +113,7 @@ void DrawDock::end_copy()
     if (!m_IsHovered)
         return;
 
+    copy_fbo_rect();
     reset_rect();
     m_CopyVbo.buffer_data(m_CopyRect);
 
@@ -157,4 +160,58 @@ void DrawDock::update_copy_buffer(float cur_mouse_x, float cur_mouse_y)
     m_CopyRect[5] = eN;
 
     m_CopyVbo.buffer_data(m_CopyRect);
+}
+
+void DrawDock::copy_fbo_rect()
+{
+
+    constexpr size_t n = std::tuple_size<decltype(m_CopyRect)>::value;
+
+    // bottom left is min x min y, top right is max x max y, bl is index 0, tr is index 1
+    std::array<glm::vec2, 2> fbo_copy_rect = {};
+
+    float min_x = std::numeric_limits<float>::infinity();    
+    float min_y = std::numeric_limits<float>::infinity();  
+    float max_x = -std::numeric_limits<float>::infinity();   
+    float max_y = -std::numeric_limits<float>::infinity();   
+
+    auto minmax_x = std::minmax_element(m_CopyRect.begin(), m_CopyRect.end(),
+        [](const glm::vec2& a, const glm::vec2& b){
+            return a.x < b.x;  
+        });
+
+    // in ndc the y coords are flipped so we flip innequality to find the relative max y
+    auto minmax_y = std::minmax_element(m_CopyRect.begin(), m_CopyRect.end(),
+        [](const glm::vec2& a, const glm::vec2& b){
+            return a.y > b.y;
+        });
+
+    const glm::vec2& viewport = m_Fbo.get_spec().viewport;
+
+    fbo_copy_rect[0] = ndc_to_pixel({ minmax_x.first->x, minmax_y.first->y }, viewport.x, viewport.y);
+    fbo_copy_rect[1] = ndc_to_pixel({ minmax_x.second->x, minmax_y.second->y }, viewport.x, viewport.y);
+
+    int width = static_cast<int>(fbo_copy_rect[1].x - fbo_copy_rect[0].x);
+    int height = static_cast<int>(fbo_copy_rect[1].y - fbo_copy_rect[0].y);
+
+
+    m_Fbo.bind();
+    glReadBuffer(GL_COLOR_ATTACHMENT0);
+
+    // the image is upside down when its going to be read so we need to start reading from the y max and gets it flipped position
+    int flipped_y =  static_cast<int>(viewport.y - fbo_copy_rect[1].y);
+
+       // 4 for rgba, will do macro 
+    unsigned char* bytes = new unsigned char[width * height * 4];
+    glReadPixels(static_cast<int>(fbo_copy_rect[0].x), flipped_y,
+        width, height, GL_RGBA, GL_UNSIGNED_BYTE, bytes); 
+
+
+    save_png(bytes, width, height);
+    delete[] bytes;
+
+
+    m_Fbo.unbind();
+
+
 }

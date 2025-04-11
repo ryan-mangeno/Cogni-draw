@@ -57,9 +57,9 @@ void Gui::render(DrawDock& dock)
 
 	// white
 	static ImVec4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
-	if (ImGui::ColorEdit3("Stencil Color", (float*)&color))
+	if (ImGui::ColorEdit4("Stencil Color", (float*)&color))
 	{
-		dock.set_stencil_color(glm::vec3{ color.x, color.y, color.z }); 
+		dock.set_stencil_color(glm::vec4{ color.x, color.y, color.z, color.w }); 
 	}
 
 	ImGui::End();

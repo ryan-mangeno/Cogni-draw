@@ -29,7 +29,7 @@ public:
 	inline float& get_stencil_size_ref() { return m_StencilSize; }
 	void on_cursor_move(float mouse_x, float mouse_y);
 	inline void set_stencil_size(float size) { m_StencilSize = size; }
-	inline void set_stencil_color(glm::vec3 color) { m_Color = color; }
+	inline void set_stencil_color(glm::vec4 color) { m_Color = color; }
 
 	inline uint32_t get_fbo_scene_ID() { return m_Fbo.get_full_scene_tex_ID(); }
 	inline bool get_hover_state() const { return m_IsHovered; }
@@ -41,6 +41,7 @@ private:
 	{
 		std::fill(std::begin(m_CopyRect), std::end(m_CopyRect), glm::vec2(0.0f, 0.0f));
 	}
+	void copy_fbo_rect();
 
 private:
 
@@ -65,7 +66,7 @@ private:
 	bool m_IsDrawing;
 	bool m_IsCopying;
 	float m_StencilSize;
-	glm::vec3 m_Color;
+	glm::vec4 m_Color;
 };
 
 

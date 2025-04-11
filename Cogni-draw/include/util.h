@@ -8,7 +8,7 @@
 struct Vertex2D
 {
 	glm::vec2 pos;
-	glm::vec3 color;
+	glm::vec4 color;
 	// no tex pos since this is just for painting for now
 };
 
