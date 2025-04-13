@@ -32,6 +32,7 @@ class Shader
 	public:
 		Shader() = default;
 		Shader(const std::string& filename);
+		~Shader();
 
 		void set_uniform_1f(const std::string& uni_name, const float val);
 		void set_uniform_1i(const std::string& uni_name, const int val);

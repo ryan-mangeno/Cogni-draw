@@ -45,6 +45,11 @@ Shader::Shader(const std::string& filepath) : m_UniformLocationCache()
 
 }
 
+Shader::~Shader()
+{
+	glDeleteProgram(m_ID);
+}
+
 // reads a text file and outputs a string with everything in the text file
 ShaderProgramSource get_file_contents(const std::string& filename)
 {

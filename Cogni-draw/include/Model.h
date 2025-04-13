@@ -27,28 +27,28 @@ namespace ModelLoader {
 	uint32_t make_texture(const std::string& path);
 
 
-	class Model {
+	class Model 
+	{
 	public:
-		Model(const char* fname);
+		Model(const std::string& fname);
 
 		void init();
 		void render(Shader* shader);
 
 	private:
+		void load_model(const std::string& path);
+		void process_node(aiNode* node, const aiScene* scene);
+
+		::ModelLoader::Mesh process_mesh(aiMesh* mesh, const aiScene* scene);
+		std::vector<::ModelLoader::Texture> load_material_textures(aiMaterial* mat, aiTextureType type, std::string typeName);
+
+	private:
+
 		std::vector<::ModelLoader::Mesh> meshes;
 		std::vector<::ModelLoader::Texture> textures;
 		std::vector<::ModelLoader::Texture> textures_loaded;
 
 		std::string filePath;
-
-		void load_model(std::string path);
-
-		void process_node(aiNode* node, const aiScene* scene);
-
-		::ModelLoader::Mesh process_mesh(aiMesh* mesh, const aiScene* scene);
-
-		std::vector<::ModelLoader::Texture> load_material_textures(aiMaterial* mat, aiTextureType type, std::string typeName);
-
 	};
 
 }

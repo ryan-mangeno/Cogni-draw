@@ -1,6 +1,6 @@
 #include "Gui.h"
 
-Gui::Gui(GLFWwindow* window) : m_Window(window), m_IsHovered(false)
+Gui::Gui(GLFWwindow* window) : m_Window(window)
 {
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
@@ -28,20 +28,30 @@ Gui::~Gui()
 	ImGui::DestroyContext();
 }
 
-void Gui::render(DrawDock& dock)
+void Gui::render(DrawDock& draw_dock, ModelDock& model_dock)
 {
 
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplGlfw_NewFrame();
 	ImGui::NewFrame();
 
+	m_focus = Focus::NONE;
+
 	ImGuiID dockspace_id = ImGui::GetID("MyDockspace");
 	ImGui::DockSpaceOverViewport(dockspace_id, ImGui::GetMainViewport());
 
 	ImGui::SetNextWindowPos(ImVec2(10, 10), ImGuiCond_FirstUseEver); 
 	ImGui::Begin("CG-Sketch");
-	ImGui::Image(dock.get_fbo_scene_ID(), ImVec2(1920, 1080));
-	m_IsHovered = ImGui::IsItemHovered();
+	ImGui::Image(draw_dock.get_fbo_scene_ID(), ImVec2(1920, 1080));
+	if (ImGui::IsItemHovered()) m_focus = Focus::DRAW;
+
+
+	ImGui::End();
+
+
+	ImGui::Begin("Model Viewer");
+	ImGui::Image(model_dock.get_fbo_scene_ID(), ImVec2(1920, 1080));
+	if (ImGui::IsItemHovered()) m_focus = Focus::MODEL;
 
 	ImGui::End();
 
@@ -49,17 +59,17 @@ void Gui::render(DrawDock& dock)
 	ImGui::SetNextWindowPos(ImVec2(10, 10), ImGuiCond_FirstUseEver); 
 	ImGui::Begin("Stencil Config", nullptr, ImGuiWindowFlags_NoCollapse);
 
-	float stencil_config_size = dock.get_stencil_size_ref();  
+	float stencil_config_size = draw_dock.get_stencil_size_ref();
 	if (ImGui::SliderFloat("Stencil Size", &stencil_config_size, 0.0f, 20.0f, "%.2f"))
 	{
-		dock.set_stencil_size(stencil_config_size);
+		draw_dock.set_stencil_size(stencil_config_size);
 	}
 
 	// white
 	static ImVec4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
 	if (ImGui::ColorEdit4("Stencil Color", (float*)&color))
 	{
-		dock.set_stencil_color(glm::vec4{ color.x, color.y, color.z, color.w }); 
+		draw_dock.set_stencil_color(glm::vec4{ color.x, color.y, color.z, color.w });
 	}
 
 	ImGui::End();

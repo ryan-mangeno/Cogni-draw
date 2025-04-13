@@ -48,8 +48,9 @@ namespace ModelLoader {
 
 
 
-	Model::Model(const char* fname) : filePath(fname) 
+	Model::Model(const std::string& name) : filePath(name)
 	{
+		init();
 	}
 
 	void Model::init() 
@@ -65,7 +66,7 @@ namespace ModelLoader {
 		}
 	}
 
-	void Model::load_model(std::string path) {
+	void Model::load_model(const std::string& path) {
 
 
 		Assimp::Importer importer;
@@ -87,7 +88,7 @@ namespace ModelLoader {
 		for (unsigned int i = 0; i < node->mNumMeshes; i++)
 		{
 			// the node object only contains indices to index the actual objects in the scene. 
-			// the scene contains all the data, node is just to keep stuff organized (like relations between nodes).
+			// the scene contains all the data, node is just to keep stuff organized (like relations between nodes)
 			aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
 			meshes.push_back(process_mesh(mesh, scene));
 		}
@@ -130,7 +131,7 @@ namespace ModelLoader {
 				vertex.Normal = glm::vec3(0.0f, 0.0f, 1.0f);
 			}
 
-			if (mesh->mTextureCoords[0]) // does the mesh contain texture coordinates?
+			if (mesh->mTextureCoords[0]) // if contains tex coords
 			{
 				glm::vec2 vec(0.0f);
 				vec.x = mesh->mTextureCoords[0][i].x;

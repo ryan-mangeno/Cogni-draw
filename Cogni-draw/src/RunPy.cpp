@@ -8,9 +8,9 @@ void run_async_python(const std::string& input_file, std::atomic_flag& is_done)
 
     static std::stringstream sys_cmd("");
 
-#ifdef WINDOWS
+#ifdef _WIN32
     sys_cmd << "python " << input_file;
-#elif LINUX
+#elif __linux__
     sys_cmd << "python3 " << input_file;
 #endif       
 

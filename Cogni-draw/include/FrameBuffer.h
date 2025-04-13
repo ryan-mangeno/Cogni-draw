@@ -7,11 +7,11 @@
 
 struct FrameBufferSpecification 
 {
-	unsigned int num_color_attachments;
+	uint32_t num_color_attachments;
 	glm::uvec2 viewport;
 	bool SwapChainTarget = false;
 
-	FrameBufferSpecification(unsigned int width, unsigned int height, unsigned int num_color_attachments) noexcept
+	FrameBufferSpecification(uint32_t width, uint32_t height, uint32_t num_color_attachments) noexcept
 		: viewport(width, height), num_color_attachments(num_color_attachments)
 	{
 	}
@@ -44,6 +44,7 @@ public:
 	inline unsigned int get_paint_scene_tex_ID() { return m_ColorAttachments[0]; }
 	inline unsigned int get_full_scene_tex_ID() { return m_ColorAttachments[1]; }
 	inline unsigned int get_depth_tex_ID() { return m_DepthTexture; }
+	inline unsigned int get_color_attach(int index) { return m_ColorAttachments[index]; }
 	inline const FrameBufferSpecification& get_spec() { return Specification; }
 
 	void set_draw_target(unsigned int slot);

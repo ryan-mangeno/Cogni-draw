@@ -6,7 +6,7 @@
 
 
 // for right now the frame buffer will be the same size at the drawing pad
-DrawDock::DrawDock(unsigned int width, unsigned int height)
+DrawDock::DrawDock(uint32_t width, uint32_t height)
 	: m_Fbo({ width, height, 2 }), m_PaintShader("Resources/Shaders/2dpaint.glsl"), m_CopyShader("Resources/Shaders/drag_rect.glsl"),
     m_Width(width), m_Height(height), m_PaintVao(), m_PaintVbo(sizeof(Vertex2D) * width * height), m_CopyVao(), m_CopyVbo(sizeof(glm::vec2)*6), m_IsHovered(false),
     m_IsDrawing(false), m_IsCopying(false), m_CopyRect(), m_StencilSize(3.05f), m_Color(1.0f, 1.0f, 1.0f, 1.0f)
@@ -24,9 +24,9 @@ DrawDock::~DrawDock()
 
 }
 
-void DrawDock::update(bool hover_state)
+void DrawDock::update(Focus focus_state)
 {
-    m_IsHovered = hover_state;
+    m_IsHovered = focus_state == Focus::DRAW ? true : false;
 }
 
 void DrawDock::render()

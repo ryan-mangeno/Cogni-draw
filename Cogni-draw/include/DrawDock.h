@@ -15,11 +15,11 @@ class DrawDock
 {
 
 public:
-	DrawDock(unsigned int width, unsigned int height);
+	DrawDock(uint32_t width, uint32_t height);
 	~DrawDock();
 
 	void render();
-	void update(bool hover_state);
+	void update(Focus focus_state);
 
 	void start_draw(float mouse_x, float mouse_y);
 	void stop_draw();
@@ -29,7 +29,7 @@ public:
 	inline float& get_stencil_size_ref() { return m_StencilSize; }
 	void on_cursor_move(float mouse_x, float mouse_y);
 	inline void set_stencil_size(float size) { m_StencilSize = size; }
-	inline void set_stencil_color(glm::vec4 color) { m_Color = color; }
+	inline void set_stencil_color(const glm::vec4& color) { m_Color = color; }
 
 	inline uint32_t get_fbo_scene_ID() { return m_Fbo.get_full_scene_tex_ID(); }
 	inline bool get_hover_state() const { return m_IsHovered; }
@@ -61,7 +61,7 @@ private:
 	std::array<glm::vec2, 6> m_CopyRect;
 	glm::vec2 m_CopyPivot;
 
-	unsigned int m_Height, m_Width;
+	uint32_t m_Height, m_Width;
 	bool m_IsHovered;
 	bool m_IsDrawing;
 	bool m_IsCopying;
