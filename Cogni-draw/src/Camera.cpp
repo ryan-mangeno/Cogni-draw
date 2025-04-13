@@ -3,6 +3,8 @@
 //general up direction for projection stuff 
 constexpr glm::vec3 g_Up(0.f, 1.f, 0.f);
 
+#include <GLFW/glfw3.h>
+
 
 Camera::Camera(glm::vec3 position, int width, int height, float fov, float nearPlane, float farPlane)
     : m_Width(width),
@@ -32,20 +34,20 @@ glm::mat4 Camera::CalcMVP(const glm::mat4& model_mat) const
     return m_ProjectionMat * CalcViewMatrix() * model_mat;
 }
 
-void Camera::DispatchKeyboardEvent(MovementDir dir, float deltaTime)
+void Camera::DispatchKeyboardEvent(int key, float deltaTime)
 {
 
     float velocity = m_Speed * deltaTime;
 
-    switch (dir) 
+    switch (key) 
     {
-        case FORWARD:      m_Position += m_Orientation * velocity; break;
-        case BACK:         m_Position += -m_Orientation * velocity; break;
-        case LEFT:         m_Position += -m_Right * velocity; break;
-        case RIGHT:        m_Position += m_Right * velocity; break;
-        case UP:           m_Position += g_Up * velocity; break;
-        case DOWN:         m_Position += -g_Up * velocity; break;
-        case NONE:                                         break;
+
+        case GLFW_KEY_W:      m_Position += m_Orientation * velocity; break;
+        case GLFW_KEY_S:         m_Position += -m_Orientation * velocity; break;
+        case GLFW_KEY_A:         m_Position += -m_Right * velocity; break;
+        case GLFW_KEY_D:        m_Position += m_Right * velocity; break;
+        case GLFW_KEY_Q:           m_Position += -g_Up * velocity; break;
+        case GLFW_KEY_E:         m_Position += g_Up * velocity; break;
 
         default:                                           break;
 

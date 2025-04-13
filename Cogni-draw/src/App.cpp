@@ -5,6 +5,8 @@
 
 #include <iostream>
 
+
+// temp, will likely move to some app attribs class
 static float deltaTime = 0.0f;
 
 void App::run()
@@ -62,7 +64,7 @@ static void on_mouse_click(GLFWwindow* window, int button, int action, int mods)
 	ImGui_ImplGlfw_MouseButtonCallback(window, button, action, mods);
 
 
-	App::DockContext* dock_context = static_cast<App::DockContext*>(glfwGetWindowUserPointer(window));
+	DockContext* dock_context = static_cast<DockContext*>(glfwGetWindowUserPointer(window));
 
 	Focus cur_focus = dock_context->get_focus();
 
@@ -101,15 +103,13 @@ static void on_mouse_click(GLFWwindow* window, int button, int action, int mods)
 	
 }
 
-static bool escaped = false;
-
 
 static void cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
 {
 
 	ImGui_ImplGlfw_CursorPosCallback(window, xpos, ypos);
-	App::DockContext* dock_context = static_cast<App::DockContext*>(glfwGetWindowUserPointer(window));
 
+	DockContext* dock_context = static_cast<DockContext*>(glfwGetWindowUserPointer(window));
 	Focus cur_focus = dock_context->get_focus();
 
 
@@ -121,38 +121,27 @@ static void cursor_position_callback(GLFWwindow* window, double xpos, double ypo
 	else if (cur_focus == Focus::MODEL)
 	{
 		ModelDock* dock = dock_context->get_model_dock();
-
 		Camera* cam = dock->get_camera();
-		static bool first_mouse = false;
-		static double prev_mouse_x, prev_mouse_y;
+		App::AppAttribs& attribs = App::AppAttribs::get_app_attribs();
 
-		if (escaped)
+		if (attribs.is_escaped)
 			return;
 
-		int win_width, win_height;
-		glfwGetWindowSize(window, &win_width, &win_height);
-		double center_x = win_width / 2.0;
-		double center_y = win_height / 2.0;
+		constexpr double center_x = SCREEN_WIDTH / 2.0;
+		constexpr double center_y = SCREEN_HEIGHT / 2.0;
 
-		if (first_mouse) 
+		if (attribs.first_mouse)
 		{
 			glfwSetCursorPos(window, center_x, center_y);
-			prev_mouse_x = center_x;
-			prev_mouse_y = center_y;
-			first_mouse = false;
+			attribs.first_mouse = false;
 		}
 
-		float xoffset = xpos - prev_mouse_x;
-		float yoffset = ypos - prev_mouse_y;
-
-		prev_mouse_x = xpos;
-		prev_mouse_y = ypos;
+		float xoffset = xpos - center_x;
+		float yoffset = ypos - center_y;
 
 		cam->DispatchMouseMoveEvent(xoffset, yoffset);
-
 		glfwSetCursorPos(window, center_x, center_y);
-		prev_mouse_x = center_x;
-		prev_mouse_y = center_y;
+
 	}
 }
 
@@ -160,7 +149,7 @@ static void cursor_position_callback(GLFWwindow* window, double xpos, double ypo
 static void keyboard_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
 	ImGui_ImplGlfw_KeyCallback(window, key, scancode, action, mods);
-	App::DockContext* dock_context = static_cast<App::DockContext*>(glfwGetWindowUserPointer(window));
+	DockContext* dock_context = static_cast<DockContext*>(glfwGetWindowUserPointer(window));
 
 	Focus cur_focus = dock_context->get_focus();
 
@@ -175,27 +164,19 @@ static void keyboard_callback(GLFWwindow* window, int key, int scancode, int act
 	{
 		ModelDock* dock = dock_context->get_model_dock();
 		Camera* cam = dock->get_camera();
+		App::AppAttribs& attribs = App::AppAttribs::get_app_attribs();
 
-		auto key_to_dir = [](int key) -> MovementDir {
-			switch (key)
-			{
-				case GLFW_KEY_A: return MovementDir::LEFT;
-				case GLFW_KEY_D: return MovementDir::RIGHT;
-				case GLFW_KEY_W: return MovementDir::FORWARD;
-				case GLFW_KEY_S: return MovementDir::BACK;
-				case GLFW_KEY_Q: return MovementDir::DOWN;
-				case GLFW_KEY_E: return MovementDir::UP;
-				case GLFW_KEY_ESCAPE: escaped = !escaped;
-				default: return MovementDir::NONE;
-			}
-			};
+
 
 		if (action == GLFW_PRESS || action == GLFW_REPEAT)
 		{
-			MovementDir dir = key_to_dir(key);
-			if (dir != MovementDir::NONE)
+
+			if (key == GLFW_KEY_ESCAPE)
+				attribs.is_escaped = !attribs.is_escaped;
+
+			else
 			{
-				cam->DispatchKeyboardEvent(dir, deltaTime); 
+				cam->DispatchKeyboardEvent(key, deltaTime);
 			}
 		}
 	}
@@ -217,10 +198,6 @@ void App::set_draw_dock(DrawDock& drawDock, ModelDock& modelDock)
 bool App::init()
 {
 	bool success = true;
-
-
-	constexpr uint32_t SCREEN_WIDTH = 1920;
-	constexpr uint32_t SCREEN_HEIGHT = 1080;
 
 	// init GLFW
 	if (!glfwInit())

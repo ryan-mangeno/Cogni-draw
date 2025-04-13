@@ -19,7 +19,7 @@ public:
 	inline glm::mat4& GetProjMat() { return m_ProjectionMat; }
 	inline float GetZoom() const { return m_Zoom; }
 
-	void DispatchKeyboardEvent(MovementDir direction, float deltaTime);
+	void DispatchKeyboardEvent(int key, float deltaTime);
 	void DispatchMouseMoveEvent(float xrot, float yrot);
 	void DispatchMouseScrollEvent(float scroll);
 
@@ -28,7 +28,7 @@ public:
 	// singleton for camera, only one camera for model viewer
 	inline static Camera& GetCamera() 
 	{
-		static Camera c(glm::vec3(0.0f, 25.0f, 0.0f), 1920, 1080, 45.f, 0.1f, 100.f);
+		static Camera c(glm::vec3(0.0f, 0.0f, 5.0f), 1920, 1080, 45.f, 0.1f, 100.f);
 		return c;
 	}
 

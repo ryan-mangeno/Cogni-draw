@@ -4,10 +4,9 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-#include "DrawDock.h"
-#include "ModelDock.h"
-#include "util.h"
 
+#include "util.h"
+#include "DockContext.h"
 
 
 class App
@@ -15,33 +14,25 @@ class App
 public:
 
 
-	class DockContext
+	struct AppAttribs
 	{
-		friend class App;
-	public:
+	
+		bool is_escaped = true;
+		bool first_mouse = true;
 
-		DockContext() = default;
-
-		inline void set_focus(Focus focus) { focused_dock = focus; }
-		inline Focus get_focus() const { return focused_dock; }
-
-		inline DrawDock* get_draw_dock() { return draw_dock; }
-		inline ModelDock* get_model_dock() { return model_dock; }
-
-	private:
-
-		explicit DockContext(DrawDock* drawDock, ModelDock* modelDock)
-			: draw_dock(drawDock), model_dock(modelDock)
+		static AppAttribs& get_app_attribs()
 		{
+			static AppAttribs attribs;
+			return attribs;
 		}
 
-		DrawDock* draw_dock = nullptr;
-		ModelDock* model_dock = nullptr;
+	private:
+		AppAttribs() = default;
 
-		Focus focused_dock = Focus::NONE;
+		AppAttribs(const AppAttribs&) = delete;
+		AppAttribs& operator=(const AppAttribs&) = delete;
+
 	};
-
-
 
 	App() = default;
 	~App();
