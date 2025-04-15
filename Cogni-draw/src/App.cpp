@@ -24,7 +24,6 @@ void App::run()
 
 	model_viewer.push_model("Resources/Assets/ghost.obj");
 
-
 	float prevTime = 0.0f;
 	float curTime = 0.0f;
 
@@ -228,16 +227,8 @@ bool App::init()
 			success = false;
 		}
 
-		// Configure viewport and rendering
 		glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 		
-		// need to set these
-		
-		//glfwSetFramebufferSizeCallback(m_Window, CallBackStates::framebufferSizeCallback);
-		//glfwSetCursorPosCallback(m_Window, CallBackStates::mouse_callback);
-		//glfwSetScrollCallback(m_Window, CallBackStates::scroll_callback);
-
-		// white
 		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);	
 		glEnable(GL_BLEND);

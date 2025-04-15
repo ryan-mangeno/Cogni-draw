@@ -91,9 +91,12 @@ void DrawDock::stop_draw()
         return;
 
     m_IsDrawing = false;
+    std::cout << m_DrawnVertices.size() << '\n';
 
-    // since we rendered to fbo we dont have to clear unless the user wants to, we can simple flush vertices
+    // since we rendered to fbo we dont have to clear unless the user wants to, we can simply flush vertices
     std::vector<Vertex2D>().swap(m_DrawnVertices);
+    // could use clear and shrink to fit but shrink to fit isnt garunteed to be fulfilled
+    // and while clear is useful here since vertex2d is trivial, I don't want the memory to persist since users can make draws very long
 }
 
 
@@ -140,21 +143,22 @@ void DrawDock::update_copy_buffer(float cur_mouse_x, float cur_mouse_y)
     glm::vec2 c1 = { e.x, p.y };
     glm::vec2 c2 = { p.x, e.y };
 
-    auto toNDC = [&](const glm::vec2& px) {
-        return glm::vec2(
-            2.0f * px.x / m_Width - 1.0f,
-            -(1.0f - 2.0f * px.y / m_Height)
-        );
-        };
+    const glm::vec2& vp = m_Fbo.get_spec().viewport;
 
-    glm::vec2 pN = toNDC(p);
-    glm::vec2 c1N = toNDC(c1);
-    glm::vec2 c2N = toNDC(c2);
-    glm::vec2 eN = toNDC(e);
+    glm::vec2 pN = pixel_to_ndc(p, vp.x, vp.y); // pivot corner
+    glm::vec2 c1N = pixel_to_ndc(c1, vp.x, vp.y); // above/below mouse 
+    glm::vec2 c2N = pixel_to_ndc(c2, vp.x, vp.y); // above/below pivot
+    glm::vec2 eN = pixel_to_ndc(e, vp.x, vp.y); // mouse corner
 
+
+    // since we all glDrawArrays(...) we ensure that indices don't matter when drawing the quad
+    
+    // first tri, using pivot and 2 corners that are not the mouse corner
     m_CopyRect[0] = pN;
     m_CopyRect[1] = c1N;
     m_CopyRect[2] = c2N;
+
+    // second tri, using the 2 corners and the mouse corner
     m_CopyRect[3] = c2N;
     m_CopyRect[4] = c1N;
     m_CopyRect[5] = eN;
@@ -201,7 +205,7 @@ void DrawDock::copy_fbo_rect()
     // the image is upside down when its going to be read so we need to start reading from the y max and gets it flipped position
     int flipped_y =  static_cast<int>(viewport.y - fbo_copy_rect[1].y);
 
-       // 4 for rgba, will do macro 
+    // 4 for rgba
     unsigned char* bytes = new unsigned char[width * height * 4];
     glReadPixels(static_cast<int>(fbo_copy_rect[0].x), flipped_y,
         width, height, GL_RGBA, GL_UNSIGNED_BYTE, bytes); 
