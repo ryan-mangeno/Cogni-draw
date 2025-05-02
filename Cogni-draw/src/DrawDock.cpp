@@ -34,17 +34,16 @@ void DrawDock::render()
     GLint viewport[4];
     glGetIntegerv(GL_VIEWPORT, viewport);
     m_Fbo.bind();
-    m_Fbo.set_draw_target(0);
+    m_Fbo.set_draw_target(0); // setting to default frame buffer
 
     const glm::uvec2& vp = m_Fbo.get_spec().viewport;
     glViewport(0, 0, vp[0], vp[1]);
 
+
     m_PaintShader.bind();
-
-    glLineWidth(m_StencilSize);
-
     m_PaintVao.bind();
 
+    glLineWidth(m_StencilSize);
     // drawing the current brush of paint 
     glDrawArrays(GL_LINE_STRIP, 0, m_DrawnVertices.size());
 

@@ -2,6 +2,7 @@
 #define IMAGE_H
 
 #include "stb/stb_image_write.h" 
+#include "stb/stb_image_resize.h"
 #include <vector>
 
 void save_png(const unsigned char* pixels, int width, int height);
