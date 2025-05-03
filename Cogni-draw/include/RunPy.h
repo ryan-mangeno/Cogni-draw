@@ -1,3 +1,6 @@
+#ifndef RUN_PY_H
+#define RUN_PY_H
+
 #include <thread>
 #include <cstdlib>
 #include <string>
@@ -5,4 +8,19 @@
 #include <functional>
 #include <atomic>
 
-void run_async_python(const std::string& input_file, std::atomic_flag& is_done);
+class AsyncPy
+{
+public:
+	AsyncPy(const std::string& input_file);
+	~AsyncPy() = default;
+
+	inline bool check_done() { return m_Done.test(); }
+	inline std::atomic_flag* get_flag() { return &m_Done; }
+
+private:
+	std::atomic_flag m_Done;
+	
+};
+
+
+#endif

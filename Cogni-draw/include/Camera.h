@@ -18,6 +18,7 @@ public:
 	inline glm::vec3& GetPos() { return m_Position; }
 	inline glm::mat4& GetProjMat() { return m_ProjectionMat; }
 	inline float GetZoom() const { return m_Zoom; }
+	inline glm::vec3& GetOrientation() { return m_Orientation; }
 
 	void DispatchKeyboardEvent(int key, float deltaTime);
 	void DispatchMouseMoveEvent(float xrot, float yrot);

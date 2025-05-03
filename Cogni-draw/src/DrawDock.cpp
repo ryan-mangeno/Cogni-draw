@@ -1,6 +1,8 @@
 #include "DrawDock.h"
 #include "mathutil.h"
 #include "Image.h"
+#include "RunPy.h"
+#include "ModelBuffer.h"
 #include <limits>
 #include <algorithm>
 
@@ -43,6 +45,9 @@ void DrawDock::render()
     m_PaintShader.bind();
     m_PaintVao.bind();
 
+    glDisable(GL_DEPTH_TEST);
+
+
     glLineWidth(m_StencilSize);
     // drawing the current brush of paint 
     glDrawArrays(GL_LINE_STRIP, 0, m_DrawnVertices.size());
@@ -62,6 +67,8 @@ void DrawDock::render()
     
     m_Fbo.unbind();
     glViewport(viewport[0], viewport[1], viewport[2], viewport[3]); 
+    glEnable(GL_DEPTH_TEST);
+	m_PaintVao.unbind();
 
 }
 
@@ -90,7 +97,6 @@ void DrawDock::stop_draw()
         return;
 
     m_IsDrawing = false;
-    std::cout << m_DrawnVertices.size() << '\n';
 
     // since we rendered to fbo we dont have to clear unless the user wants to, we can simply flush vertices
     std::vector<Vertex2D>().swap(m_DrawnVertices);
@@ -213,8 +219,12 @@ void DrawDock::copy_fbo_rect()
     save_png(bytes, width, height);
     delete[] bytes;
 
-
     m_Fbo.unbind();
+
+
+    // we saved the image now we push model into model queue for our python script to run
+	ModelBuffer& mb = ModelBuffer::get_instance();
+    mb.push_model();
 
 
 }

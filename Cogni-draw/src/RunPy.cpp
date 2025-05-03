@@ -3,18 +3,19 @@
 
 #include <iostream>
 
-void run_async_python(const std::string& input_file, std::atomic_flag& is_done)
+
+AsyncPy::AsyncPy(const std::string& input_file)
 {
+    m_Done.clear();
 
-    const std::string sys_cmd("python " + input_file);
+    std::string sys_cmd("python " + input_file);
 
-    std::function<void()> run_script_fn = [cmd = std::move(sys_cmd), &is_done]
+    std::function<void()> run_script_fn = [cmd = std::move(sys_cmd), this]
         {
             std::system(cmd.c_str());
-            is_done.test_and_set();
+            m_Done.test_and_set();
         };
 
     // detatch to run seperate
-    std::thread(run_script_fn).detach(); 
-
+    std::thread(run_script_fn).detach();
 }

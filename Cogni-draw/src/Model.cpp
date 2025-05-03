@@ -115,7 +115,7 @@ namespace ModelLoader {
 			glm::vec3 vec(0.0f);
 
 			vec.x = mesh->mVertices[i].x;
-			vec.y = mesh->mVertices[i].y;
+			vec.y = -mesh->mVertices[i].y;
 			vec.z = mesh->mVertices[i].z;
 			vertex.Position = vec;
 
@@ -182,7 +182,7 @@ namespace ModelLoader {
 
 			// Check if texture was loaded before and if so, continue to next iteration: skip loading a new texture
 			GLboolean skip = false;
-			std::cout << textures_loaded.size() << "\n";
+			//std::cout << textures_loaded.size() << "\n";
 			for (GLuint j = 0; j < textures_loaded.size(); j++)
 			{
 				if (textures_loaded[j].path == path)
@@ -198,7 +198,9 @@ namespace ModelLoader {
 			{   // If texture hasn't been loaded already, load it
 				::ModelLoader::Texture texture;
 
-				texture.id = make_texture(path.C_Str());
+				std::string pathStr = path.C_Str();
+
+				texture.id = make_texture("Resources/Assets/" + pathStr);
 				texture.type = typeName;
 				texture.path = path;
 				textures.push_back(texture);

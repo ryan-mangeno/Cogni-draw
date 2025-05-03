@@ -42,27 +42,24 @@ void ModelLoader::Mesh::render(Shader* shader) {
 	unsigned int diffuseNr = 1;
 	unsigned int specularNr = 1;
 	for (int i = 0; i < textures.size(); i++) {
-		glActiveTexture(GL_TEXTURE1 + i); 
-		std::string number;
+		glActiveTexture(GL_TEXTURE1 + i);  // Activate a texture unit
 		std::string name = textures[i].type;
+		std::string number;
 
-
-		if (name == "texture_diffuse")
-		{
-			number = std::to_string(diffuseNr++); 
+		if (name == "texture_diffuse") {
+			number = std::to_string(diffuseNr++);
+			shader->set_uniform_1i("u_DiffuseTexture", i);  
 		}
-		else if (name == "texture_specular")
-		{
-			number = std::to_string(specularNr++); 
+		else if (name == "texture_specular") {
+			number = std::to_string(specularNr++);
+			shader->set_uniform_1i("u_SpecularTexture", i);  
 		}
 
-		shader->set_uniform_1i(name + number, i + 1);
-		glBindTexture(GL_TEXTURE_2D, textures[i].id);
+		glBindTexture(GL_TEXTURE_2D, textures[i].id); 
 	}
 
 	glBindVertexArray(m_VAO);
 	glDrawElements(GL_TRIANGLES, static_cast<unsigned int>(indices.size()), GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
-
 	glActiveTexture(GL_TEXTURE0);
 }

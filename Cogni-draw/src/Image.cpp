@@ -20,7 +20,6 @@ void save_png(const unsigned char* bytes, int width, int height)
         // * 4 for RGBA channel
         if (stbi_write_png(file_path.c_str(), 512, 512, 4, resized, 512 * 4))
         {
-            std::cout << "Image saved successfully to: " << file_path << std::endl;
         }
         else
         {

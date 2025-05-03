@@ -11,3 +11,4 @@ Cogni-draw/x64/
 Cogni-draw/vendor/imgui/ImGui.vcxproj
 Cogni-draw/imgui.ini
 Cogni-draw/python/.env
+**/__pycache__/

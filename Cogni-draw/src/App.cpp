@@ -19,11 +19,6 @@ void App::run()
 	ModelDock model_viewer(1920, 1080);
 	set_draw_dock(paint, model_viewer);
 
-	std::atomic_flag is_done;
-	run_async_python("python/anthro_api.py", is_done);
-
-	model_viewer.push_model("Resources/Assets/ghost.obj");
-
 	float prevTime = 0.0f;
 	float curTime = 0.0f;
 
@@ -234,7 +229,8 @@ bool App::init()
 		glEnable(GL_BLEND);
 		//glCullFace(GL_BACK);
 		//glFrontFace(GL_CW);
-		//glEnable(GL_DEPTH_TEST);
+		glEnable(GL_DEPTH_TEST);
+		glDepthFunc(GL_LESS);
 	}
 
 	return success;
