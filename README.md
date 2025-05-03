@@ -10,7 +10,6 @@ Cogni-draw is an interactive prototype application that leverages AI techniques 
 
 - **Region Capture**: Right-click and drag to select a rectangular region of the framebuffer, which is then saved as a PNG image.
 - **AI Export**: ChatGPT api with 4o-mini and then dalle, working on segmentation api, might use meshy
-- **Lightweight**: built in C++ and Python using msvc
 
 ## Prerequisites
 
@@ -21,6 +20,9 @@ Cogni-draw is an interactive prototype application that leverages AI techniques 
 - [stb_image_write.h](https://github.com/nothings/stb/blob/master/stb_image_write.h) (for PNG output)
 - [stb_image_resize.h](https://github.com/nothings/obbg/blob/master/stb/stb_image_resize.h) (for image resizing)
 
+##Demo I/O
+https://github.com/user-attachments/assets/c94a80a1-66ed-4709-bd19-587857590509
+![demo](https://github.com/user-attachments/assets/12c550a5-b08e-49d3-a131-dd064d4ae018)
 
 ## Building 
 
