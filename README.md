@@ -22,7 +22,10 @@ Cogni-draw is an interactive prototype application that leverages AI techniques 
 
 ##Demo I/O
 ![demo](https://github.com/user-attachments/assets/12c550a5-b08e-49d3-a131-dd064d4ae018)
-![demo](https://github.com/user-attachments/assets/c94a80a1-66ed-4709-bd19-587857590509)
+
+
+https://github.com/user-attachments/assets/3ab01c99-9fdb-47bc-91bb-3cba51efd5b3
+
 
 ## Building 
 
