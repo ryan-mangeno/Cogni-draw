@@ -21,8 +21,8 @@ Cogni-draw is an interactive prototype application that leverages AI techniques 
 - [stb_image_resize.h](https://github.com/nothings/obbg/blob/master/stb/stb_image_resize.h) (for image resizing)
 
 ##Demo I/O
-https://github.com/user-attachments/assets/c94a80a1-66ed-4709-bd19-587857590509
 ![demo](https://github.com/user-attachments/assets/12c550a5-b08e-49d3-a131-dd064d4ae018)
+![demo](https://github.com/user-attachments/assets/c94a80a1-66ed-4709-bd19-587857590509)
 
 ## Building 
 
