@@ -1,9 +1,0 @@
-{
-    "Version": "1.1",
-    "Data": {
-        "Source": "c:\\dev\\cogni-draw\\cogni-draw\\libraries\\include\\glm\\glm.cppm",
-        "ProvidedModule": "glm",
-        "ImportedModules": [],
-        "ImportedHeaderUnits": []
-    }
-}

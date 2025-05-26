@@ -1,6 +1,5 @@
 bin/
-bint/
-int/
+bin-int/
 .vs/
 *.ipch
 *.VC.db
