@@ -15,7 +15,7 @@ public:
 	~Gui();
 	void render(DrawDock& draw_dock, ModelDock& model_dock);
 
-	inline Focus get_focus_state() { return m_focus; }
+	inline Focus get_focus_state() const { return m_focus; }
 
 private:
 

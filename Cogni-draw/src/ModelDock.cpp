@@ -2,7 +2,7 @@
 #include "ModelBuffer.h"
 
 ModelDock::ModelDock(uint32_t width, uint32_t height)
-	: m_Shader("Resources/Shaders/model_viewer.glsl"), m_Fbo({width, height, 1}), m_Camera(&Camera::GetCamera()), m_IsHovered(false)
+	: m_Shader("Cogni-draw/Resources/Shaders/model_viewer.glsl"), m_Fbo({width, height, 1}), m_Camera(&Camera::GetCamera()), m_IsHovered(false)
 {
 }
 
@@ -51,7 +51,7 @@ void ModelDock::update(Focus focus_state, float deltaTime)
     if (mb.peek_buffer()) // if a model is done and ready to be loaded
     {
         mb.pop_model();
-        push_model("Resources/Assets/generated_model.obj");
+        push_model("Cogni-draw/Resources/Assets/generated_model.obj");
     }
 }
 

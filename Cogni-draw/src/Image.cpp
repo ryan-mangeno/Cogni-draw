@@ -8,7 +8,7 @@
 
 void save_png(const unsigned char* bytes, int width, int height)
 {   
-    const std::string file_path = "Resources/Drawings/drawing.png";
+    const std::string file_path = "Cogni-draw/Resources/Drawings/drawing.png";
 
     unsigned char* resized = new unsigned char[512 * 512 * 4];
     // resizing to 512x512 always to save token usage with api

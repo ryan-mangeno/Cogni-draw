@@ -102,7 +102,7 @@ ShaderProgramSource get_file_contents(const std::string& filename)
 	}
 	else
 	{
-		throw std::runtime_error("Failed to open file: " + filename);
+		std::cout << "Failed to find: " << filename << std::endl;
 	}
 }
 

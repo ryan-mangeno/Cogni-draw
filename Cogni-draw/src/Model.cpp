@@ -200,7 +200,7 @@ namespace ModelLoader {
 
 				std::string pathStr = path.C_Str();
 
-				texture.id = make_texture("Resources/Assets/" + pathStr);
+				texture.id = make_texture("Cogni-draw/Resources/Assets/" + pathStr);
 				texture.type = typeName;
 				texture.path = path;
 				textures.push_back(texture);
