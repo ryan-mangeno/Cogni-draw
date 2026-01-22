@@ -5,11 +5,9 @@ import time
 
 if __name__ == "__main__":
     # gen image from drawing
-    #generate_image_from_drawing()
-
-    time.sleep(2) # testing modelbuffer, remove later
+    generate_image_from_drawing()
 
     # gen 3D model from the generated image
-    #gen_model_from_image()
+    gen_model_from_image()
 
     # paths are hardcoded so we dont pass as args to the functions
